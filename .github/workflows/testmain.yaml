@@ -12,13 +12,16 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v4
 
-        # - name: Run Trivy vulnerability scanner in fs mode
-        #   uses: aquasecurity/trivy-action@master
-        #   with:
-        #     scan-type: 'fs'
-        #     exit-code: 1
-        #     # severity: ${{vars.TRIVY_KEY}}
-        #     severity: CRITICAL
+        - name: Run Trivy vulnerability scanner in fs mode
+          uses: aquasecurity/trivy-action@master
+          with:
+            scan-type: 'fs'
+            ignore-unfixed: true
+            format: 'table'
+            output: 'test.txt'
+            # severity: ${{vars.TRIVY_KEY}}
+            severity: CRITICAL
+            exit-code: 1
 
         # Send Slack notification
         - name: Send GitHub Action trigger data to Slack workflow
