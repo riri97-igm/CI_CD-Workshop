@@ -9,7 +9,10 @@ jobs:
     name: Slack Notification
     if: (!contains(github.event.head_commit.message, '#NORUN'))
     runs-on: ubuntu-latest
-    permissions: {}
+    permissions: 
+      contents: read
+      packages: write
+      id-token: write
     steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -50,12 +53,19 @@ jobs:
           with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-        -
-          name: Build and push
+
+        - id: docker_meta
+          uses: docker/metadata-action@v4.4.0
+          with:
+            images: riri97/ci-cd-workshop
+            tags: ${{ github.sha }}
+              
+        - name: Build and push
           uses: docker/build-push-action@v5
+          id: build-and-push
           with:
             push: true
-            tags: user/app:latest
+            tags: ${{ steps.docker_meta.outputs.tags }}
 
         # # Send Slack notification
         # - name: Slack Notification
