@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v3
 
         - name: Run Trivy vulnerability scanner in fs mode
           uses: aquasecurity/trivy-action@master
@@ -18,13 +18,13 @@ jobs:
             scan-type: 'fs'
             ignore-unfixed: true
             format: 'table'
-            output: 'test.txt'
+            output: 'trivy-results.txt'
             # severity: ${{vars.TRIVY_KEY}}
             severity: CRITICAL
             exit-code: 1
 
         # Send Slack notification
-        - name: Send GitHub Action trigger data to Slack workflow
+        - name: Slack Notification
           uses: rtCamp/action-slack-notify@v2
           env:
               SLACK_TITLE: "Image build and signed"
@@ -34,4 +34,5 @@ jobs:
                 Email: e1327867@u.nus.edu
                 GitHub: https://github.com/riri97-igm/CI_CD-Workshop.git
               SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
