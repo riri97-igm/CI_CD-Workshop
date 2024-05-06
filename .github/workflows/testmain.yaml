@@ -19,3 +19,15 @@ jobs:
         exit-code: 1
         # severity: ${{vars.TRIVY_KEY}}
         severity: CRITICAL
+
+    # Send Slack notification
+    - name: Send GitHub Action trigger data to Slack workflow
+      uses: rtCamp/action-slack-notify@v2
+      env:
+          SLACK_TITLE: "Image build and signed"
+          SLACK_MESSAGE: |
+            Name: Ingyin May
+            Matriculation: A0290836W
+            Email: e1327867@u.nus.edu
+            GitHub: https://github.com/riri97-igm/CI_CD-Workshop.git
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
