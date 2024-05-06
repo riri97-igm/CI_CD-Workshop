@@ -55,5 +55,5 @@ jobs:
             slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
             channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
             content: 'file content'
-            file_path: '/home/runner/work/CI_CD-workshop/CI_CD-workshop/trivy-results.txt'
+            file_path: 'trivy-results.txt'
             initial_comment: 'post by slack-upload-file'
