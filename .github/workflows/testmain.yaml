@@ -30,79 +30,79 @@ jobs:
             format: 'table'
             output: 'trivy-results.txt'
             # severity: ${{vars.TRIVY_KEY}}
-            severity: CRITICAL
+            severity: HIGH
             exit-code: 1
 
         # Send Slack notification
-        - name: Slack Notification
-          if: ${{ success() }}
-          uses: rtCamp/action-slack-notify@v2
-          env:
-              SLACK_TITLE: "Image build and signed"
-              SLACK_MESSAGE: |
-                Name: Ingyin May
-                Matriculation: A0290836W
-                Email: e1327867@u.nus.edu
-                GitHub: https://github.com/riri97-igm/CI_CD-Workshop.git
-                Docker: https://https://hub.docker.com/repository/docker/riri97/ci-cd-workshop/general
-              SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
-
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-
-        - name: Login to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-        - id: docker_meta
-          uses: docker/metadata-action@v4.4.0
-          with:
-            images: riri97/ci-cd-workshop
-            tags: ${{ github.sha }}
-
-        - name: Build and push
-          uses: docker/build-push-action@v5
-          id: build-and-push
-          with:
-            push: true
-            tags: ${{ steps.docker_meta.outputs.tags }}
-
-        - name: Sign image with a key
-          run: |
-            images=""
-            for tag in ${TAGS}; do
-              images+="${tag}@${DIGEST} "
-            done
-            cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
-          env:
-            TAGS: ${{ steps.docker_meta.outputs.tags }}
-            COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-            COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-            DIGEST: ${{ steps.build-and-push.outputs.digest }}
-
-        # Send Slack notification
         # - name: Slack Notification
-        #   if: ${{ failure() }}
+        #   if: ${{ success() }}
         #   uses: rtCamp/action-slack-notify@v2
         #   env:
         #       SLACK_TITLE: "Image build and signed"
-        #       SLACK_MESSAGE: "Fail trivy scan, Check the report for details"
-        #       SLACK_COLOR: '#FF0000'
+        #       SLACK_MESSAGE: |
+        #         Name: Ingyin May
+        #         Matriculation: A0290836W
+        #         Email: e1327867@u.nus.edu
+        #         GitHub: https://github.com/riri97-igm/CI_CD-Workshop.git
+        #         Docker: https://https://hub.docker.com/repository/docker/riri97/ci-cd-workshop/general
         #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         #       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-        # - name: file upload
-        #   if: ${{ failure() }}
-        #   uses: MeilCli/slack-upload-file@v4
+        # - name: Set up QEMU
+        #   uses: docker/setup-qemu-action@v3
+
+        # - name: Set up Docker Buildx
+        #   uses: docker/setup-buildx-action@v3
+
+        # - name: Login to Docker Hub
+        #   uses: docker/login-action@v3
         #   with:
-        #     slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-        #     content: 'file content'
-        #     file_path: 'trivy-results.txt'
-        #     initial_comment: 'Posted by Ingyin May'
+        #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+        #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        # - id: docker_meta
+        #   uses: docker/metadata-action@v4.4.0
+        #   with:
+        #     images: riri97/ci-cd-workshop
+        #     tags: ${{ github.sha }}
+
+        # - name: Build and push
+        #   uses: docker/build-push-action@v5
+        #   id: build-and-push
+        #   with:
+        #     push: true
+        #     tags: ${{ steps.docker_meta.outputs.tags }}
+
+        # - name: Sign image with a key
+        #   run: |
+        #     images=""
+        #     for tag in ${TAGS}; do
+        #       images+="${tag}@${DIGEST} "
+        #     done
+        #     cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
+        #   env:
+        #     TAGS: ${{ steps.docker_meta.outputs.tags }}
+        #     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        #     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        #     DIGEST: ${{ steps.build-and-push.outputs.digest }}
+
+        # Send Slack notification
+        - name: Slack Notification
+          if: ${{ failure() }}
+          uses: rtCamp/action-slack-notify@v2
+          env:
+              SLACK_TITLE: "Image build and signed"
+              SLACK_MESSAGE: "Fail trivy scan, Check the report for details"
+              SLACK_COLOR: '#FF0000'
+              SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+        - name: file upload
+          if: ${{ failure() }}
+          uses: MeilCli/slack-upload-file@v4
+          with:
+            slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+            channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+            content: 'file content'
+            file_path: 'trivy-results.txt'
+            initial_comment: 'Posted by Ingyin May'
