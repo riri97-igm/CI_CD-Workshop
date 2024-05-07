@@ -93,6 +93,7 @@ jobs:
         #   env:
         #       SLACK_TITLE: "Image build and signed"
         #       SLACK_MESSAGE: "Fail trivy scan, Check the report for details"
+        #       SLACK_COLOR: '#FF0000'
         #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         #       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
@@ -104,4 +105,4 @@ jobs:
         #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         #     content: 'file content'
         #     file_path: 'trivy-results.txt'
-        #     initial_comment: 'post by slack-upload-file'
+        #     initial_comment: 'Posted by Ingyin May'
