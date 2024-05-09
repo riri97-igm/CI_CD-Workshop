@@ -44,7 +44,7 @@ jobs:
         #         Matriculation: A0290836W
         #         Email: e1327867@u.nus.edu
         #         GitHub: https://github.com/riri97-igm/CI_CD-Workshop.git
-        #         Docker: https://https://hub.docker.com/repository/docker/riri97/ci-cd-workshop/general
+        #         Docker: https://hub.docker.com/repository/docker/riri97/ci-cd-workshop/general
         #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         #       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
@@ -105,4 +105,4 @@ jobs:
             channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
             content: 'file content'
             file_path: 'trivy-results.txt'
-            initial_comment: 'Posted by Ingyin May'
+            initial_comment: 'Scan report by Ingyin May'
